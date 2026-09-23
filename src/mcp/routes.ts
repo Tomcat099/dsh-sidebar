@@ -23,7 +23,7 @@ import {
   searchCachedTools,
   type CachedTool,
 } from './catalog.js'
-import type { HealthSummary } from './diagnostics.js'
+import { summarize, type HealthSummary } from './diagnostics.js'
 import type { HealthPassOptions } from './health.js'
 import { applyCredentialMigration, planCredentialMigration } from './credentials.js'
 import type { ProbeOptions, ProbeResult } from './probe.js'
@@ -41,6 +41,7 @@ import {
   transferBetween,
   viewFor,
   type ScopeContext,
+  type ScopeView,
 } from './scope.js'
 import { createSnapshot, deleteSnapshot } from './snapshot.js'
 import { exportRedacted, importIntoDocument, parseImportJson, type ImportMode } from './transfer.js'
@@ -289,6 +290,67 @@ function probeRow(entry: McpServerEntry, result: ProbeResult): Record<string, un
 }
 
 /**
+ * The document a scope would hold with one entry inserted or replaced.
+ *
+ * Matching is by id, which is what the Host keys tool prefixes off, so saving an
+ * edited entry overwrites it in place instead of appending a second copy.
+ * @param view - scope as it currently stands on disk.
+ * @param entry - entry the user just confirmed.
+ * @returns the candidate document.
+ */
+function withEntry(view: ScopeView, entry: McpServerEntry): McpScopeDocument {
+  const servers = view.servers.some(item => item.id === entry.id)
+    ? view.servers.map(item => (item.id === entry.id ? entry : item))
+    : [...view.servers, entry]
+  return { revision: view.revision, servers }
+}
+
+/**
+ * Restrict a summary to one scope.
+ *
+ * The health store holds every configured entry across both scopes, but the
+ * page shows one list at a time. Summarizing both would let a failing entry in
+ * the other scope report 部分异常 over a list where every visible row is green —
+ * a verdict the user can neither see nor act on.
+ * @param summary - summary over every configured entry.
+ * @param scope - scope to keep.
+ * @returns the restricted summary.
+ */
+export function scopedSummary(summary: HealthSummary, scope: McpScope): HealthSummary {
+  const rows = summary.results.filter(row => row.scope === scope)
+  return rows.length === summary.results.length ? summary : summarize(rows)
+}
+
+/**
+ * Check one freshly written entry and phrase the outcome for the page.
+ *
+ * The pass is scoped to this entry, so every other row keeps the verdict it
+ * already had: saving one server must not repaint the whole list.
+ * @param runtime - Host services.
+ * @param scope - scope the entry lives in.
+ * @param entry - entry that was just written.
+ * @returns the summary, this entry's row, and a sentence describing it.
+ */
+async function settle(
+  runtime: McpRuntime,
+  scope: McpScope,
+  entry: McpServerEntry,
+): Promise<Record<string, unknown>> {
+  const health = scopedSummary(await runtime.healthPass({ only: [{ ...entry, scope }] }), scope)
+  const row = health.results.find(item => item.id === entry.id && item.scope === scope) ?? null
+  const connected = entry.enabled === true && row?.ok === true
+  let message = '已保存'
+  if (row !== null) {
+    if (entry.enabled !== true) message = '已保存 · 已停用'
+    else if (row.ok === true) message = '已保存 · 连接成功'
+    else message = `已保存，连接失败：${row.message}`
+  }
+  // The request succeeded either way; `connected` is what decides whether the
+  // page paints the row green or red.
+  return { health, check: row, connected, message }
+}
+
+/**
  * Combine an edited scope with the untouched one read from disk.
  * @param context - loaded context.
  * @param scope - scope the edited list belongs to.
@@ -359,7 +421,7 @@ function routes(runtime: McpRuntime): Route[] {
                 root: context.project.root,
                 servers: context.project.servers,
               },
-          health: await runtime.healthPass({ defer: true }),
+          health: scopedSummary(await runtime.healthPass({ defer: true }), asScope(url.searchParams.get('scope'), 'global')),
           tools: {
             count: listCachedTools(runtime.profileDir, servers).length,
             fetchedAt: newest ?? null,
@@ -391,9 +453,14 @@ function routes(runtime: McpRuntime): Route[] {
       },
     },
 
-    // ---- Save, with validation and pre-flight in one round trip ------------
+    // ---- Save one entry, then say what a handshake made of it ---------------
+    // The dialog's own save is the only save, so writing and checking are one
+    // action instead of two: the entry lands first, and whatever the handshake
+    // answers becomes that row's state. A server that happens to be down must
+    // not cost the user their edit, so a failed handshake reads as 连接异常
+    // rather than as a refusal to save.
     {
-      path: `${ROUTE_PREFIX}/save`,
+      path: `${ROUTE_PREFIX}/server/save`,
       methods: ['POST'],
       handle: async (request, response) => {
         const body = asRecord(await readJson(request))
@@ -404,44 +471,21 @@ function routes(runtime: McpRuntime): Route[] {
           send(response, 200, { ok: false, stage: 'scope', error: '当前没有打开的项目，无法保存项目级配置' })
           return
         }
-        const doc = asDocument(body, view.revision)
+        const entry = normalizeEntry(body.server)
+        if (entry === undefined) {
+          send(response, 200, { ok: false, stage: 'validate', error: '这一条缺少必需的字段', issues: [] })
+          return
+        }
+        const doc = withEntry(view, entry)
         const verdict = validateDocument(doc)
         if (!verdict.ok) {
-          const problems = verdict.issues
           send(response, 200, {
             ok: false,
             stage: 'validate',
-            error: problems.map(issue => issue.message).join('；'),
+            error: verdict.issues.map(issue => issue.message).join('；'),
             issues: verdict.issues,
           })
           return
-        }
-        // A new destination, or one that moved, must answer before it lands. A
-        // credential or setting change only produces a warning, so rotating a
-        // token never requires the new token to already work.
-        let warnings: Array<Record<string, unknown>> = []
-        if (body.probe !== false) {
-          const current: McpScopeDocument = { revision: view.revision, servers: view.servers }
-          const { must, may } = splitProbeTargets(current, doc)
-          const [mustRows, mayRows] = await Promise.all([
-            Promise.all(must.map(async entry => probeRow(entry, await probeEntry(entry, {})))),
-            Promise.all(may.map(async entry => probeRow(entry, await probeEntry(entry, {})))),
-          ])
-          warnings = mayRows.filter(row => row.ok !== true && row.kind !== 'managed')
-          const failed = mustRows.filter(row => row.ok !== true && row.kind !== 'managed')
-          if (failed.length > 0) {
-            const names = failed.map(row => `「${String(row.name ?? row.id)}」`).join('、')
-            send(response, 200, {
-              ok: false,
-              stage: 'probe',
-              error:
-                `${names}的新地址没有握上手，配置没有保存。` +
-                `失败原因已经写在那一行展开后的诊断里；只想先把配置存下来就点「跳过握手保存」`,
-              issues: verdict.issues,
-              results: [...mustRows, ...mayRows],
-            })
-            return
-          }
         }
         const outcome = commit(context, scope, doc, { expectedRevision: asExpectedRevision(body) })
         if (!outcome.ok) {
@@ -457,13 +501,96 @@ function routes(runtime: McpRuntime): Route[] {
         await runtime.remount()
         send(response, 200, {
           ok: true,
-          message: warnings.length === 0
-            ? `已保存到${scopeLabel(scope)}`
-            : `已保存到${scopeLabel(scope)}；有 ${String(warnings.length)} 条只改了凭据或设置的服务器没有通过握手，状态见列表`,
+          scope,
           revision: outcome.stored?.revision,
           issues: verdict.issues,
-          warnings,
-          health: await runtime.healthPass({ force: true }),
+          entry,
+          ...await settle(runtime, scope, entry),
+        })
+      },
+    },
+
+    // ---- Switch one entry on or off -----------------------------------------
+    {
+      path: `${ROUTE_PREFIX}/server/enable`,
+      methods: ['POST'],
+      handle: async (request, response) => {
+        const body = asRecord(await readJson(request))
+        const scope = asScope(body.scope)
+        const context = runtime.context()
+        const view = viewFor(context, scope)
+        if (view === undefined) {
+          send(response, 200, { ok: false, stage: 'scope', error: '当前没有打开的项目，无法停用或启用这一条' })
+          return
+        }
+        const id = typeof body.id === 'string' ? body.id : ''
+        const existing = view.servers.find(item => item.id === id)
+        if (existing === undefined) {
+          send(response, 200, { ok: false, stage: 'missing', error: '这一条已经不在配置里了' })
+          return
+        }
+        const entry: McpServerEntry = { ...existing, enabled: body.enabled === true }
+        const outcome = commit(context, scope, withEntry(view, entry), { expectedRevision: asExpectedRevision(body) })
+        if (!outcome.ok) {
+          send(response, 200, {
+            ok: false,
+            stage: outcome.conflicted === true ? 'conflict' : 'commit',
+            error: outcome.message,
+            issues: outcome.issues,
+            current: outcome.current,
+          })
+          return
+        }
+        await runtime.remount()
+        send(response, 200, {
+          ok: true,
+          scope,
+          revision: outcome.stored?.revision,
+          entry,
+          ...await settle(runtime, scope, entry),
+        })
+      },
+    },
+
+    // ---- Remove one entry ---------------------------------------------------
+    {
+      path: `${ROUTE_PREFIX}/server/delete`,
+      methods: ['POST'],
+      handle: async (request, response) => {
+        const body = asRecord(await readJson(request))
+        const scope = asScope(body.scope)
+        const context = runtime.context()
+        const view = viewFor(context, scope)
+        if (view === undefined) {
+          send(response, 200, { ok: false, stage: 'scope', error: '当前没有打开的项目，无法删除这一条' })
+          return
+        }
+        const id = typeof body.id === 'string' ? body.id : ''
+        const removed = view.servers.find(item => item.id === id)
+        if (removed === undefined) {
+          send(response, 200, { ok: false, stage: 'missing', error: '这一条已经不在配置里了' })
+          return
+        }
+        const doc: McpScopeDocument = { revision: view.revision, servers: view.servers.filter(item => item.id !== id) }
+        const outcome = commit(context, scope, doc, { expectedRevision: asExpectedRevision(body) })
+        if (!outcome.ok) {
+          send(response, 200, {
+            ok: false,
+            stage: outcome.conflicted === true ? 'conflict' : 'commit',
+            error: outcome.message,
+            issues: outcome.issues,
+            current: outcome.current,
+          })
+          return
+        }
+        await runtime.remount()
+        // Nothing to probe: the row leaves with the entry it described.
+        send(response, 200, {
+          ok: true,
+          scope,
+          revision: outcome.stored?.revision,
+          message: `已删除「${displayName(removed)}」`,
+          health: scopedSummary(await runtime.healthPass({ defer: true }), scope),
         })
       },
     },
@@ -589,7 +716,11 @@ function routes(runtime: McpRuntime): Route[] {
           send(response, 200, { ok: true, health: row ?? null })
           return
         }
-        send(response, 200, { ok: true, health: summary })
+        // 不带 scope 时返回全量：调用方需要两个作用域的行就自己挑。
+        send(response, 200, {
+          ok: true,
+          health: scope === null ? summary : scopedSummary(summary, asScope(scope, 'global')),
+        })
       },
     },
 

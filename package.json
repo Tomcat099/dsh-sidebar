@@ -1,6 +1,7 @@
 {
   "name": "dsh-sidebar",
   "version": "0.1.0",
+  "private": true,
   "description": "Three-section left navigation for DeepSeek Harness. · DSH 左侧三段导航。",
   "type": "module",
   "main": "lib/index.js",
@@ -51,5 +52,5 @@
       "patch": "./cordis.patch.yml"
     }
   },
-  "license": "Apache-2.0"
+  "license": "MIT"
 }

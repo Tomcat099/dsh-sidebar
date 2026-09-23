@@ -117,6 +117,8 @@ window.__ModuleLoader__.load({
 .dsb-icon-btn:hover{background:var(--dsw-alias-interactive-bg-hover)}
 .dsb-menu{display:flex;flex-direction:column;gap:2px;min-width:0;max-width:100%;padding:4px 8px 8px}
 .dsb-row{display:flex;align-items:center;gap:8px;width:100%;min-width:0;min-height:36px;padding:0 8px;border:0;border-radius:8px;background:transparent;color:inherit;font:inherit;text-align:left;white-space:nowrap;cursor:pointer}
+.dsbGuard{display:flex;flex-direction:column;gap:6px;padding:8px}
+.dsbGuardDetail{margin:0;padding:8px 10px;border-radius:8px;background:var(--dsw-alias-state-error-secondary);color:var(--dsw-alias-label-primary-foreground);font:11px/16px var(--ds-font-family-code);white-space:pre-wrap;overflow-wrap:anywhere;max-height:200px;overflow:auto;text-align:left}
 .dsb-row:hover,.dsb-row[data-active=true]{background:var(--dsw-alias-interactive-bg-hover)}
 .dsb-row svg{flex:none;color:var(--dsw-alias-label-secondary)}
 .dsb-scroll{flex:1;min-height:0;overflow:auto;padding:0 4px 8px}
@@ -240,9 +242,8 @@ window.__ModuleLoader__.load({
 .mcpRowFailed{border-color:color-mix(in srgb,var(--dsw-alias-state-error-primary) 40%,var(--dsw-alias-border-l2))}
 .mcpBody{display:flex;flex-direction:column;gap:8px;padding:10px 12px 12px;border-top:0.5px solid var(--dsw-alias-border-l2)}
 .mcpToolName{font-family:var(--ds-font-family-code);font-size:12.5px;color:var(--dsw-alias-label-primary)}
-.mcpToolRow{display:flex;flex-direction:column;gap:2px;width:100%;padding:8px 10px;border:0.5px solid var(--dsw-alias-border-l2);border-radius:9px;background:var(--dsw-alias-bg-layer-1);color:inherit;font:inherit;text-align:left;cursor:pointer}
-.mcpToolRow:hover{border-color:var(--dsw-alias-border-l3)}
-.mcpToolDesc{margin:0;color:var(--dsw-alias-label-tertiary);font-size:12px;line-height:17px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mcpToolRow{display:flex;flex-direction:column;gap:2px;width:100%;padding:8px 10px;border:0.5px solid var(--dsw-alias-border-l2);border-radius:9px;background:var(--dsw-alias-bg-layer-1);text-align:left}
+.mcpToolDesc{margin:0;color:var(--dsw-alias-label-tertiary);font-size:12px;line-height:17px;overflow-wrap:anywhere}
 .mcpRowHead{display:flex;align-items:center;gap:12px;padding:12px 14px;background:transparent}
 .mcpRowOpen{border-color:var(--dsw-alias-border-l3)}
 .mcpRowToggle{flex:1;display:flex;align-items:center;gap:10px;min-width:0;padding:2px 4px;margin:-2px -4px;border:0;border-radius:8px;background:transparent;color:inherit;cursor:pointer;text-align:left;font:inherit;transition:background .12s ease}
@@ -252,7 +253,7 @@ window.__ModuleLoader__.load({
 .mcpRowActions{display:flex;align-items:center;gap:2px;flex:none}
 .mcpBodyNote{display:flex;flex-direction:column;gap:3px;padding:8px 10px;border-radius:9px;background:var(--dsw-alias-interactive-bg-hover)}
 .mcpBodyNote p{margin:0;color:var(--dsw-alias-label-secondary);font-size:12px;line-height:17px}
-.mcpToolList{display:flex;flex-direction:column;gap:6px;max-height:280px;overflow-y:auto}
+.mcpToolList{display:flex;flex-direction:column;gap:6px}
 .mcpMarkWrap{position:relative;flex:none;display:flex}
 .mcpMarkWrap .mcpDot{position:absolute;right:-1px;bottom:-1px;width:8px;height:8px;box-shadow:0 0 0 2px var(--dsw-alias-bg-layer-1)}
 .mcpIconBtn{flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;padding:0;border:0;border-radius:7px;background:transparent;color:var(--dsw-alias-label-tertiary);cursor:pointer}
@@ -276,14 +277,12 @@ window.__ModuleLoader__.load({
 .mcpPanel{border:0.5px solid var(--dsw-alias-border-l2);border-radius:10px;background:var(--dsw-alias-bg-base);overflow:hidden}
 .mcpPanelHead{padding:8px 12px;border-bottom:0.5px solid var(--dsw-alias-border-l2);background:color-mix(in srgb,var(--dsw-alias-interactive-bg-hover) 50%,transparent)}
 .mcpPanelTitle{flex:1;font-size:12px;font-weight:600;line-height:18px;color:var(--dsw-alias-label-secondary)}
-.mcpPanelBody{display:flex;flex-direction:column;gap:10px;padding:10px 12px 12px}
-.mcpGrid2{display:grid;grid-template-columns:1.2fr 1fr;gap:10px;align-items:end}
-@media (max-width:560px){.mcpGrid2{grid-template-columns:1fr;align-items:stretch}}
-.mcpField{display:grid;grid-template-rows:auto minmax(16px,auto) auto;gap:4px;min-width:0;align-content:end}
-.mcpFieldPlain{grid-template-rows:auto auto;gap:6px}
+.mcpPanelBody{display:flex;flex-direction:column;gap:12px;padding:12px 12px 14px}
+.mcpGrid2{display:grid;grid-template-columns:1fr 1fr;gap:14px 10px;align-items:start}
+@media (max-width:560px){.mcpGrid2{grid-template-columns:1fr}}
+.mcpField{display:flex;flex-direction:column;gap:5px;min-width:0}
 .mcpLabel{font-size:12px;font-weight:500;line-height:16px;color:var(--dsw-alias-label-secondary)}
-.mcpFieldHint{font-size:11px;line-height:16px;color:var(--dsw-alias-label-tertiary);min-height:16px}
-.mcpFieldHintReserve{visibility:hidden}
+.mcpFieldHint{font-size:11px;line-height:16px;color:var(--dsw-alias-label-tertiary)}
 .mcpInput{box-sizing:border-box;width:100%;height:34px;padding:0 10px;border:0.5px solid transparent;border-radius:7px;background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary);font:inherit;font-size:13px;line-height:20px;transition:border-color .12s ease,background .12s ease,box-shadow .12s ease;outline:none}
 .mcpInput::placeholder{color:var(--dsw-alias-label-caption)}
 .mcpInput:hover{background:color-mix(in srgb,var(--dsw-alias-interactive-bg-hover) 70%,var(--dsw-alias-bg-layer-1))}
@@ -292,9 +291,7 @@ window.__ModuleLoader__.load({
 .mcpSelectWrap{position:relative;display:flex}
 .mcpSelectWrap::after{content:'';position:absolute;top:50%;right:11px;width:6px;height:6px;border-right:1.5px solid var(--dsw-alias-label-tertiary);border-bottom:1.5px solid var(--dsw-alias-label-tertiary);transform:translateY(-70%) rotate(45deg);pointer-events:none}
 .mcpSelect{padding-right:28px;appearance:none;cursor:pointer}
-.mcpSwitchList{display:flex;flex-direction:column;border:0.5px solid var(--dsw-alias-border-l2);border-radius:8px;overflow:hidden;background:var(--dsw-alias-bg-layer-1)}
-.mcpSwitchRow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 10px}
-.mcpSwitchRow+.mcpSwitchRow{border-top:0.5px solid var(--dsw-alias-border-l2)}
+.mcpSwitchRow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 11px;border:0.5px solid var(--dsw-alias-border-l2);border-radius:9px;background:var(--dsw-alias-bg-layer-1)}
 .mcpSwitchInfo{display:flex;flex-direction:column;gap:1px;min-width:0;flex:1}
 .mcpSwitchLabel{font-size:12px;font-weight:500;line-height:16px;color:var(--dsw-alias-label-primary)}
 .mcpSwitchHint{font-size:11px;line-height:15px;color:var(--dsw-alias-label-tertiary)}
@@ -340,11 +337,9 @@ window.__ModuleLoader__.load({
 .mcpDiagState{font-size:13px;font-weight:600;color:var(--dsw-alias-label-primary)}
 .mcpDiagStage{font-size:11.5px;color:var(--dsw-alias-label-tertiary)}
 .mcpDiagBadge{padding:0 6px;border-radius:999px;background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-secondary);font-size:11px;line-height:18px;white-space:nowrap}
-.mcpDiagBadgeDraft{background:var(--dsw-alias-state-warn-secondary);color:var(--dsw-alias-label-primary)}
 .mcpDiagBadgeBad{background:var(--dsw-alias-state-error-secondary);color:var(--dsw-alias-label-primary)}
 .mcpRowName{display:flex;align-items:center;gap:6px;min-width:0}
 .mcpRowName .mcpName{min-width:0}
-.mcpRowDraft{border-left:2px solid var(--dsw-alias-state-warn-primary)}
 .mcpDiagText{margin:0;color:var(--dsw-alias-label-secondary);font-size:12.5px;line-height:18px}
 .mcpDiagAction{margin:0;color:var(--dsw-alias-label-primary);font-size:12.5px;line-height:18px}
 .mcpDiagMeta{margin:0;color:var(--dsw-alias-label-tertiary);font-size:11.5px;line-height:16px}
@@ -363,18 +358,20 @@ window.__ModuleLoader__.load({
 .mcpToolBar .mcpScopeBar{flex:1;min-width:260px}
 .mcpToolBar .mcpInput{flex:1;width:auto;min-width:160px}
 .mcpToolBar .mcpSelect{flex:none;width:auto;min-width:150px}
-.mcpToolRow{display:flex;align-items:center;gap:10px;width:100%;padding:9px 12px;border:0.5px solid var(--dsw-alias-border-l2);border-radius:10px;background:var(--dsw-alias-bg-layer-1);color:inherit;font:inherit;text-align:left;cursor:pointer}
-.mcpToolRow:hover{border-color:var(--dsw-alias-border-l3)}
 .mcpToolName{flex:none;font-family:var(--ds-font-family-code);font-size:12.5px;color:var(--dsw-alias-label-primary)}
 
 .mcpSnapRow{display:flex;align-items:center;gap:10px;padding:9px 12px;border:0.5px solid var(--dsw-alias-border-l2);border-radius:10px;background:var(--dsw-alias-bg-layer-1)}
 .mcpSnapMain{display:flex;flex-direction:column;gap:1px;flex:1;min-width:0}
 .mcpConnector textarea.mcpInput{height:auto;min-height:120px;padding:8px 10px;resize:vertical;line-height:18px}
 .mcpConnector .mcpHint{margin:0}
-.mcpConnector{width:min(560px,100%);height:min(760px,100%);max-height:min(760px,100%);padding:20px 20px 16px;display:flex;flex-direction:column;gap:12px;overflow:hidden}
+/* 短对话框（导入 / 导出 / 凭据迁移）按内容自适应，整块可滚；字段多的表单用下面那个变体。 */
+.mcpConnector{width:min(560px,100%);max-height:min(760px,100%);padding:20px 20px 16px;display:flex;flex-direction:column;gap:12px;overflow-y:auto}
+.mcpConnectorTall{height:min(760px,100%);overflow:hidden}
 .mcpDlgBody{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding-right:4px;margin-right:-4px;overscroll-behavior:contain}
 .mcpDlgBody::-webkit-scrollbar{width:8px}
 .mcpDlgBody::-webkit-scrollbar-thumb{background:var(--dsw-alias-border-l3);border-radius:4px}
+/* 滚动容器里的 flex 子项默认会收缩，而面板又带 overflow:hidden——两者一起会把表单尾部裁掉。 */
+.mcpDlgBody>*{flex:none}
 .mcpConnector h2{margin:0;font-size:16px;font-weight:600;line-height:24px}
 .mcpDlgHead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
 .mcpDlgSub{margin:4px 0 0;color:var(--dsw-alias-label-tertiary);font-size:12px;line-height:18px}
@@ -393,6 +390,15 @@ window.__ModuleLoader__.load({
 .mcpAddLine:hover{color:var(--dsw-alias-label-primary)}
 .mcpDlgActions{display:flex;justify-content:flex-end;gap:8px;padding-top:12px;border-top:0.5px solid var(--dsw-alias-border-l2)}
 .mcpDlgActions .mcpBtn{min-width:72px}
+/* 导入 / 导出里的代码区：等宽、不换行、自己滚动，不再用会撑破弹窗的 textarea 默认样式。 */
+.mcpCode{box-sizing:border-box;width:100%;min-height:188px;max-height:340px;padding:10px 12px;border:0.5px solid var(--dsw-alias-border-l2);border-radius:10px;background:var(--dsw-alias-bg-layer-2);color:var(--dsw-alias-label-primary);font:12px/18px var(--ds-font-family-code);white-space:pre;overflow:auto;resize:none;outline:none;transition:border-color .12s ease,background .12s ease}
+.mcpCode::placeholder{color:var(--dsw-alias-label-caption)}
+.mcpCode:focus{border-color:var(--dsw-alias-border-l3);background:var(--dsw-alias-bg-layer-1)}
+.mcpCodeReadonly{color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-1)}
+.mcpDlgRow{display:flex;align-items:flex-end;gap:8px}
+.mcpDlgRow>.mcpField{flex:1}
+.mcpParseOk{display:flex;align-items:center;gap:6px;padding:8px 11px;border-radius:9px;background:color-mix(in srgb,var(--dsw-alias-state-success-primary) 12%,var(--dsw-alias-bg-layer-1));color:var(--dsw-alias-label-primary);font-size:12px;line-height:17px}
+.mcpParseOk strong{font-weight:600}
 .mcpConnector .mcpInput,.mcpConnector .mcpSelect{height:34px;border:0.5px solid transparent;border-radius:7px;background:var(--dsw-alias-interactive-bg-hover);padding:0 10px}
 .mcpConnector .mcpSelect{padding-right:28px;appearance:none;cursor:pointer}
 .mcpConnector .mcpInput:focus,.mcpConnector .mcpSelect:focus{border-color:var(--dsw-alias-border-l3);background:var(--dsw-alias-bg-layer-1);box-shadow:0 0 0 2px color-mix(in srgb,var(--dsw-alias-label-caption) 25%,transparent)}
@@ -695,20 +701,6 @@ window.__ModuleLoader__.load({
       }
     }
 
-    /**
-     * 一条记录的「连接方式」指纹。
-     *
-     * 只覆盖决定怎么连的字段，所以改显示名不会让一条记录看起来像草稿；
-     * 探针只读磁盘，靠这个指纹才能把「表单里的值」和「正在被检测的值」分开。
-     * @param {object} form - 表单状态或由 {@link toForm} 转出来的已保存状态。
-     */
-    function connectionKey(form) {
-      return JSON.stringify([
-        form.transport, form.url, form.command, form.argsText, form.cwd,
-        form.tokenEnv, form.projectPath, form.extraHeaders, form.headerRows, form.envRows, form.readonly,
-      ])
-    }
-
     /** 参数行优先；和详情里的 argsText 不一致时退回按空白拆分。 */
     function resolveArgs(form) {
       const text = (form.argsText || '').trim()
@@ -779,38 +771,30 @@ window.__ModuleLoader__.load({
       return entry
     }
 
+    // 字段按「标签 / 控件 / 说明」排列：说明放在控件下面，长度再变也不会把
+    // 同一行的两个输入框推到不同的高度上去。
     const field = (label, value, onChange, opts) => {
-      const mono = opts && opts.mono
-      const hint = opts && opts.hint
-      const reserveHint = !(opts && opts.noHintReserve)
-      const plain = !hint && !reserveHint
-      return h('label', { className: 'mcpField' + (plain ? ' mcpFieldPlain' : '') },
+      const options = opts || {}
+      return h('label', { className: 'mcpField' },
         h('span', { className: 'mcpLabel' }, label),
-        (hint || reserveHint)
-          ? h('span', { className: 'mcpFieldHint' + (hint ? '' : ' mcpFieldHintReserve') }, hint || '\u00a0')
-          : null,
         h('input', {
-          className: 'mcpInput' + (mono ? ' mcpMono' : ''),
-          type: (opts && opts.type) || 'text',
+          className: 'mcpInput' + (options.mono ? ' mcpMono' : ''),
+          type: options.type || 'text',
           value,
-          placeholder: (opts && opts.placeholder) || '',
-          autoFocus: !!(opts && opts.autoFocus),
-          autoComplete: (opts && opts.autoComplete) || 'off',
-          spellCheck: opts && opts.spellCheck === false ? false : undefined,
+          placeholder: options.placeholder || '',
+          autoFocus: !!options.autoFocus,
+          autoComplete: options.autoComplete || 'off',
+          spellCheck: options.spellCheck === false ? false : undefined,
           onChange: (e) => onChange(e.target.value),
         }),
+        options.hint ? h('span', { className: 'mcpFieldHint' }, options.hint) : null,
       )
     }
 
     const selectField = (label, value, onChange, options, opts) => {
       const hint = typeof opts === 'string' ? opts : (opts && opts.hint)
-      const reserveHint = !(opts && opts.noHintReserve)
-      const plain = !hint && !reserveHint
-      return h('label', { className: 'mcpField' + (plain ? ' mcpFieldPlain' : '') },
+      return h('label', { className: 'mcpField' },
         h('span', { className: 'mcpLabel' }, label),
-        (hint || reserveHint)
-          ? h('span', { className: 'mcpFieldHint' + (hint ? '' : ' mcpFieldHintReserve') }, hint || '\u00a0')
-          : null,
         h('div', { className: 'mcpSelectWrap' },
           h('select', {
             className: 'mcpInput mcpSelect',
@@ -818,6 +802,7 @@ window.__ModuleLoader__.load({
             onChange: (e) => onChange(e.target.value),
           }, ...options),
         ),
+        hint ? h('span', { className: 'mcpFieldHint' }, hint) : null,
       )
     }
 
@@ -982,9 +967,9 @@ window.__ModuleLoader__.load({
      *
      * 两种用途共用同一个组件和同一份表单形状：新增传 {@link blankForm}，编辑传这一行
      * 当前的值。所以「添加 MCP」和行上的「编辑」是同一套字段，不存在只在一边能改的东西。
-     * @param {{ form: object, mode: string, busy: boolean, onChange: Function, onClose: Function, onSave: Function }} props
+     * @param {{ form: object, mode: string, busy: boolean, problems?: Array, onChange: Function, onClose: Function, onSave: Function }} props
      */
-    function ConnectorDialog({ form, mode, busy, onChange, onClose, onSave }) {
+    function ConnectorDialog({ form, mode, busy, problems, onChange, onClose, onSave }) {
       React.useEffect(() => {
         const onKey = (event) => {
           if (event.key !== 'Escape') return
@@ -1013,7 +998,7 @@ window.__ModuleLoader__.load({
         onMouseDown: (event) => { if (event.target === event.currentTarget && !busy) onClose() },
       },
         h('form', {
-          className: 'dsb-modal mcpConnector',
+          className: 'dsb-modal mcpConnector mcpConnectorTall',
           role: 'dialog',
           'aria-modal': 'true',
           'aria-labelledby': 'mcp-connector-title',
@@ -1031,6 +1016,12 @@ window.__ModuleLoader__.load({
             h('button', { className: 'mcpDlgClose', type: 'button', 'aria-label': '关闭', onClick: onClose }, '×')),
           // 表单放在可滚动的中间区：字段变多之后不能再让底部被裁掉。
           h('div', { className: 'mcpDlgBody' },
+            // 保存被拒时问题就贴在表单最上面，别让它落到被模态遮住的地方。
+            (problems || []).length === 0 ? null : h('ul', { className: 'mcpIssues', key: 'problems' },
+              problems.map((issue, index) => h('li', {
+                key: index,
+                'data-blocking': true,
+              }, issue.message))),
             fieldGroup('基本', [
             h('div', { className: 'mcpGrid2', key: 'ids' },
               field(starLabel('服务器 ID'), form.id, patch('id'), {
@@ -1043,13 +1034,10 @@ window.__ModuleLoader__.load({
                 hint: '只影响界面显示，不改工具前缀',
               }),
             ),
-            h('div', { className: 'mcpGrid2', key: 'transport' },
-              selectField('传输类型', form.transport, patch('transport'), [
-                h('option', { value: 'streamable-http', key: 'http' }, 'HTTP（远程）'),
-                h('option', { value: 'stdio', key: 'stdio' }, 'STDIO（本地进程）'),
-              ]),
-              switchRow('只读模式', form.readonly, patch('readonly'), '向服务端请求只读模式，禁止写操作'),
-            ),
+            selectField('传输类型', form.transport, patch('transport'), [
+              h('option', { value: 'streamable-http', key: 'http' }, 'HTTP（远程）'),
+              h('option', { value: 'stdio', key: 'stdio' }, 'STDIO（本地进程）'),
+            ]),
           ]),
           h('div', { className: 'mcpDlgSwap', key: form.transport },
             http
@@ -1057,6 +1045,7 @@ window.__ModuleLoader__.load({
                   field(starLabel('服务 URL'), form.url, patch('url'), {
                     placeholder: 'https://mcp.example.com/mcp',
                   }),
+                  switchRow('只读模式', form.readonly, patch('readonly'), '向服务端请求只读模式，禁止写操作'),
                   switchRow('允许明文访问内网', form.insecurePrivateNetwork, patch('insecurePrivateNetwork'),
                     '仅对 10/172.16-31/192.168 与 IPv6 ULA 字面量生效；域名与公网地址始终要求 https'),
                   lineSection('自定义 Headers', pairRows(
@@ -1142,7 +1131,6 @@ window.__ModuleLoader__.load({
       const [snapshot, setSnapshot] = React.useState(null)
       const [forms, setForms] = React.useState([])
       const [revision, setRevision] = React.useState(0)
-      const [dirty, setDirty] = React.useState(false)
       const [health, setHealth] = React.useState(null)
       const [status, setStatus] = React.useState('')
       const [tone, setTone] = React.useState('')
@@ -1157,7 +1145,6 @@ window.__ModuleLoader__.load({
       const [probeRows, setProbeRows] = React.useState(null)
       const [importDraft, setImportDraft] = React.useState(null)
       const [exportDraft, setExportDraft] = React.useState(null)
-      const [toolDetail, setToolDetail] = React.useState(null)
       const [migration, setMigration] = React.useState(null)
       const scopeRef = React.useRef('global')
 
@@ -1189,7 +1176,6 @@ window.__ModuleLoader__.load({
         const group = next === 'project' ? payload.project : payload.global
         setForms(((group && group.servers) || []).map(toForm))
         setRevision(group ? group.revision : 0)
-        setDirty(false)
         setIssues([])
         setProbeRows(null)
       }, [])
@@ -1199,8 +1185,9 @@ window.__ModuleLoader__.load({
         if (!opts.quiet) { setBusy(true); setStatus(t('loading')); setTone('') }
         try {
           const cwd = projectPathRef.current
-          const query = cwd === '' ? '' : '?cwd=' + encodeURIComponent(cwd)
-          const payload = await api('/state' + query)
+          const params = new URLSearchParams({ scope: scopeRef.current })
+          if (cwd !== '') params.set('cwd', cwd)
+          const payload = await api('/state?' + params.toString())
           if (payload.ok !== true) throw new Error(payload.error || '读取失败')
           const next = scopeRef.current === 'project' && payload.project === null ? 'global' : scopeRef.current
           scopeRef.current = next
@@ -1222,7 +1209,7 @@ window.__ModuleLoader__.load({
       const refreshHealth = React.useCallback(async (quiet) => {
         if (!quiet) { setBusy(true); setStatus(t('checking')); setTone('') }
         try {
-          const out = await api('/health?force=1')
+          const out = await api('/health?force=1&scope=' + encodeURIComponent(scopeRef.current))
           if (out.ok !== true) throw new Error(out.error || '检测失败')
           setHealth(out.health)
           if (!quiet) { setStatus(out.health.label); setTone(out.health.failed > 0 ? 'bad' : 'ok') }
@@ -1241,7 +1228,7 @@ window.__ModuleLoader__.load({
        */
       const pollHealth = React.useCallback(async () => {
         try {
-          const out = await api('/health')
+          const out = await api('/health?scope=' + encodeURIComponent(scopeRef.current))
           if (out.ok === true) setHealth(out.health)
         } catch (error) {
           // 轮询失败不该打断操作，下一次会自己好。
@@ -1261,13 +1248,11 @@ window.__ModuleLoader__.load({
         return () => clearInterval(timer)
       }, [pollHealth])
 
-      /** 丢改动前先问一句，避免切个作用域就把编辑吞掉。 */
-      const confirmDiscard = () => !dirty || window.confirm('当前有未保存的改动，切换后会丢失。继续吗？')
-
+      // 每一条改动都是当次落盘，所以列表外不存在「还没保存的编辑」，切换作用域也就
+      // 没有东西会丢；弹窗是模态的，开着的时候本来就切不了作用域。
       /** 切换作用域。 */
       const switchScope = (next) => {
         if (next === scope || snapshot === null) return
-        if (!confirmDiscard()) return
         scopeRef.current = next
         setScope(next)
         applyScope(next, snapshot)
@@ -1277,14 +1262,7 @@ window.__ModuleLoader__.load({
       /** 切换工作区：交给工具箱统一改，再靠上面的 effect 重新读取。 */
       const selectWorkspace = (id) => {
         if (id === activeWorkspaceId) return
-        if (!confirmDiscard()) return
         if (typeof onSelectWorkspace === 'function') onSelectWorkspace(id)
-      }
-
-      const patch = (index, key, value) => {
-        setForms((prev) => prev.map((f, i) => (i === index ? { ...f, [key]: value } : f)))
-        setDirty(true)
-        setIssues([])
       }
 
       /** 只校验不保存，用来在保存前看清单条问题。 */
@@ -1333,80 +1311,87 @@ window.__ModuleLoader__.load({
       }
 
       /**
-       * 保存当前作用域。
+       * 单条写入的统一入口：先落盘，再看连不连得上。
        *
-       * 新增或改过连接方式的条目必须先通过真实握手；被拒绝时把逐条结果留下，
-       * 由用户决定改配置还是强制保存。
+       * 写和检是一次动作，不存在「先保存再握手」两步。握手失败不影响已经存下来的配置，
+       * 只是那一行变红——服务器恰好挂着，不该让用户的编辑白做。
+       * @param {string} path - 单条写入口。
+       * @param {object} payload - 请求体；revision 由这里统一带上。
+       * @returns {Promise<object|null>} 返回体；请求本身失败时为 null。
        */
-      const save = async (force) => {
+      const writeServer = async (path, payload) => {
         setBusy(true)
-        setStatus(t('saving'))
         setTone('')
         try {
-          const out = await api('/save', {
+          const out = await api(path, {
             method: 'POST',
-            body: JSON.stringify({
-              scope,
-              servers: forms.map(toEntry),
-              expectedRevision: revision,
-              probe: force !== true,
-            }),
+            body: JSON.stringify({ ...payload, expectedRevision: revision }),
           })
-          setIssues(out.issues || [])
-          setProbeRows(out.results || null)
           if (out.ok === true) {
-            setStatus(out.message || '已保存')
-            setTone('ok')
-            setHealth(out.health || null)
+            if (out.health) setHealth(out.health)
             await load({ quiet: true })
-            return
+            setStatus(out.message || '已保存')
+            // 请求成功与否只说明写盘成不成功；红绿跟着握手结果走。
+            setTone(out.connected === false ? 'bad' : 'ok')
+            return out
           }
+          setIssues(out.issues || [])
           if (out.stage === 'conflict') {
-            setStatus('这份配置在别处被改过，已重新读取')
+            setStatus('这份配置在别处被改过，已重新读取，请再试一次')
             setTone('bad')
             await load({ quiet: true })
-            return
+            return out
           }
-          const groups = issueGroups(out.issues || [])
-          if (out.stage === 'validate' && groups.length > 0) {
-            setStatus(`${String(groups.length)} 类配置问题挡下了保存，见下方`)
-          } else if (out.stage === 'probe') {
-            // 原因写在编辑弹窗里，所以直接把失败的那一条打开，
-            // 别让提示指向一个看不到的地方。
-            const failedIds = (out.results || [])
-              .filter((row) => row.ok !== true && row.kind !== 'managed')
-              .map((row) => row.id)
-            const index = forms.findIndex((form) => failedIds.includes(form.id))
-            if (index >= 0) setConnector({ form: { ...forms[index] }, index })
-            setStatus(out.error || '保存失败')
-          } else {
-            setStatus(out.error || '保存失败')
-          }
+          setStatus(out.error || '保存失败')
           setTone('bad')
-          if (out.stage === 'commit') await load({ quiet: true })
+          if (out.stage === 'commit' || out.stage === 'missing') await load({ quiet: true })
+          return out
         } catch (error) {
           setStatus(String(error))
           setTone('bad')
+          return null
         } finally {
           setBusy(false)
         }
       }
 
-      /** 新建：先塞进表单，保存时才落盘。 */
-      const addServer = () => setConnector({ form: blankForm(), index: -1 })
+      /** 新建：弹窗里的「保存」就是唯一一次落盘。 */
+      const addServer = () => setConnector({ form: blankForm(), index: -1, problems: [] })
       if (addAction) addAction.current = addServer
 
       /** 编辑：把这一行当前的值带进同一个弹窗。 */
-      const editServer = (index) => setConnector({ form: { ...forms[index] }, index })
+      const editServer = (index) => setConnector({ form: { ...forms[index] }, index, problems: [] })
 
-      const saveConnector = () => {
+      /** 弹窗里的「保存」：写这一条，然后把握手结果读回来。 */
+      const saveConnector = async () => {
         if (connector === null || !formReady(connector.form)) return
-        const next = connector.form
-        setForms((prev) => (connector.index < 0
-          ? [...prev, next]
-          : prev.map((form, i) => (i === connector.index ? next : form))))
-        setDirty(true)
-        setConnector(null)
+        const out = await writeServer('/server/save', { scope, server: toEntry(connector.form) })
+        if (out === null) return
+        if (out.ok === true) {
+          setConnector(null)
+          return
+        }
+        // 校验没过、或者别处改过导致冲突：都别关弹窗，问题要留在还能看见的地方。
+        const problems = (out.issues || []).length > 0
+          ? out.issues
+          : [{ code: out.stage || 'save', message: out.error || '保存失败' }]
+        setConnector((prev) => (prev === null ? prev : { ...prev, problems }))
+      }
+
+      /** 停用 / 启用一条：立刻落盘，不再等外面的保存。 */
+      const setEnabled = async (index, enabled) => {
+        const form = forms[index]
+        if (form === undefined) return
+        await writeServer('/server/enable', { scope, id: form.id, enabled })
+      }
+
+      /** 删除一条：立刻落盘。删掉的东西由保存前的自动快照兜着。 */
+      const removeServer = async (index) => {
+        const form = forms[index]
+        if (form === undefined) return
+        if (!window.confirm(`删除「${form.name || form.id}」？`)) return
+        const out = await writeServer('/server/delete', { scope, id: form.id })
+        if (out !== null && out.ok === true) setOpenIndex(-1)
       }
 
       /** 查某条记录的健康行。 */
@@ -1446,22 +1431,26 @@ window.__ModuleLoader__.load({
       const probeFor = (id) => (probeRows || []).find((row) => row.id === id) || null
 
       /** 打开导入对话框并先做一次预校验。 */
-      const openImport = async (json, mode) => {
+      /** 打开导入弹窗：不预解析。空内容是初始状态，不该一进来就先报一次错。 */
+      const openImportDraft = () => setImportDraft({ json: '', mode: 'merge', parsed: null, error: '' })
+
+      /** 只预校验，不写。 */
+      const parseImport = async (json, mode) => {
         setBusy(true)
-        setTone('')
         try {
           const out = await api('/import', {
             method: 'POST',
             body: JSON.stringify({ scope, json, mode: mode || 'merge', apply: false }),
           })
-          if (out.ok === true) {
-            setImportDraft({ json, mode: mode || 'merge', parsed: out, error: '' })
-            setIssues(out.issues || [])
-            setStatus(out.message)
-            setTone('ok')
-          } else {
-            setImportDraft({ json, mode: mode || 'merge', parsed: null, error: out.error || '无法解析' })
-            setIssues(out.issues || [])
+          setImportDraft((prev) => (prev === null ? prev : {
+            ...prev,
+            json,
+            mode: mode || 'merge',
+            parsed: out.ok === true ? out : null,
+            error: out.ok === true ? '' : (out.error || '无法解析'),
+          }))
+          setIssues(out.issues || [])
+          if (out.ok !== true) {
             setStatus(out.error || '无法解析')
             setTone('bad')
           }
@@ -1571,18 +1560,6 @@ window.__ModuleLoader__.load({
         }
       }
 
-      const openToolDetail = async (tool) => {
-        try {
-          const params = new URLSearchParams({ name: tool.name, server: tool.server, scope: tool.scope })
-          const out = await api('/tools/detail?' + params.toString())
-          if (out.ok !== true) throw new Error(out.error || '读不到这个工具的详情')
-          setToolDetail(out.tool)
-        } catch (error) {
-          setStatus(String(error))
-          setTone('bad')
-        }
-      }
-
       /** 预演把明文凭据搬进 ~/.dsh/.env，不写任何东西。 */
       const openMigration = async () => {
         setBusy(true)
@@ -1650,45 +1627,6 @@ window.__ModuleLoader__.load({
         return endpoint
       }
 
-      /** 已保存条目的连接方式指纹，键是服务器 ID。 */
-      const savedKeys = new Map()
-      if (snapshot !== null) {
-        const group = scope === 'project' ? snapshot.project : snapshot.global
-        for (const entry of (group && group.servers) || []) savedKeys.set(entry.id, connectionKey(toForm(entry)))
-      }
-
-      /**
-       * 这一行是不是还没落盘的草稿。
-       *
-       * 探针读的是磁盘，所以草稿行必须显式标出来，否则改了 URL 却还在展示旧地址的
-       * 失败原因，看起来像改动没生效。
-       * @param {object} form - 表单状态。
-       */
-      const isDraft = (form) => savedKeys.get(form.id) !== connectionKey(form)
-
-      /** 只用这一条当前的表单值做一次握手，不写配置。 */
-      const probeOne = async (form) => {
-        setBusy(true)
-        setTone('')
-        try {
-          const out = await api('/probe', {
-            method: 'POST',
-            body: JSON.stringify({ scope, servers: [toEntry(form)], all: true }),
-          })
-          const row = (out.results || [])[0]
-          if (row !== undefined) {
-            setProbeRows((prev) => [...(prev || []).filter((item) => item.id !== row.id), row])
-          }
-          setStatus(row === undefined ? '没有拿到探测结果' : `${form.id || '这一条'}：${row.message}`)
-          setTone(row !== undefined && row.ok === true ? 'ok' : 'bad')
-        } catch (error) {
-          setStatus(String(error))
-          setTone('bad')
-        } finally {
-          setBusy(false)
-        }
-      }
-
       /**
        * 把重复的问题合并成「一句话 × N」，避免底部刷一屏同样的红字。
        * @param {Array} list - Host 返回的问题清单。
@@ -1699,17 +1637,6 @@ window.__ModuleLoader__.load({
         return [...counts.entries()].map(([message, count]) => ({ message, count }))
       }
 
-      /**
-       * 诊断区：把「当前表单值检测」和「已保存配置」分成两块并列显示。
-       *
-       * 两者会不一致——探针只读磁盘，而手动检测打的是表单里的值——所以不能只显示其一，
-       * 否则用户会看到一句和他刚做的事对不上的话。
-       * @param {object|null} row - 已保存配置的健康行。
-       * @param {object|null} probe - 最近一次针对表单值的握手结果。
-       * @param {Array} rowIssues - 这一条的问题清单。
-       * @param {object} form - 表单状态。
-       * @param {boolean} draft - 表单是否偏离了已保存的配置。
-       */
       /**
        * 展开区顶部的状态说明。
        *
@@ -1742,11 +1669,9 @@ window.__ModuleLoader__.load({
         if (state.tools.length === 0) {
           return h('p', { className: 'mcpHint' }, '还没有工具缓存。点「重新发现工具」拉一次；本地进程由 DSH 启动，这里看不到它的工具。')
         }
-        return h('div', { className: 'mcpToolList' }, state.tools.map((tool, index) => h('button', {
+        return h('div', { className: 'mcpToolList' }, state.tools.map((tool, index) => h('div', {
           key: index,
-          type: 'button',
           className: 'mcpToolRow',
-          onClick: () => { void openToolDetail(tool) },
         },
           h('span', { className: 'mcpToolName' }, tool.name),
           tool.description ? h('span', { className: 'mcpToolDesc' }, tool.description) : null,
@@ -1762,11 +1687,10 @@ window.__ModuleLoader__.load({
         const failed = row !== null && row.enabled
           && row.state !== 'healthy' && row.state !== 'unknown' && row.state !== 'disabled'
         const probe = probeFor(form.id)
-        const draft = isDraft(form)
         const issueCount = issuesFor(form.id).length
         const reason = rowReason(row, probe, endpoint)
         return h('article', {
-          className: 'mcpRow' + (failed ? ' mcpRowFailed' : '') + (draft ? ' mcpRowDraft' : '') + (open ? ' mcpRowOpen' : ''),
+          className: 'mcpRow' + (failed ? ' mcpRowFailed' : '') + (open ? ' mcpRowOpen' : ''),
           key: index,
         },
           h('header', { className: 'mcpRowHead' },
@@ -1785,7 +1709,6 @@ window.__ModuleLoader__.load({
               h('span', { className: 'mcpRowMeta' },
                 h('span', { className: 'mcpRowName' },
                   h('span', { className: 'mcpName' }, name),
-                  draft ? h('span', { className: 'mcpDiagBadge mcpDiagBadgeDraft', title: '改动还没保存' }, '未保存') : null,
                   issueCount > 0 ? h('span', { className: 'mcpDiagBadge mcpDiagBadgeBad', title: '这一条有配置问题' }, `${String(issueCount)} 处问题`) : null,
                 ),
                 reason === '' ? null : h('span', {
@@ -1809,39 +1732,20 @@ window.__ModuleLoader__.load({
                 type: 'button',
                 title: t('delete'),
                 'aria-label': `${t('delete')} ${name}`,
-                onClick: () => {
-                  setForms((prev) => prev.filter((_, i) => i !== index))
-                  setDirty(true)
-                  setOpenIndex(-1)
-                },
+                onClick: () => { void removeServer(index) },
               }, '×'),
             ),
-            toolSwitch(form.enabled, (enabled) => patch(index, 'enabled', enabled), form.enabled ? `停用${name}` : `启用${name}`),
+            toolSwitch(form.enabled, (enabled) => { void setEnabled(index, enabled) }, form.enabled ? `停用${name}` : `启用${name}`),
           ),
           open ? h('div', { className: 'mcpBody' },
             statusLine(row, probe),
             toolListFor(form),
-            toolDetail === null ? null : h('section', { className: 'mcpPanel' },
-              h('header', { className: 'mcpPanelHead' },
-                h('span', { className: 'mcpPanelTitle' }, toolDetail.name),
-                h('button', { className: 'mcpBtn', type: 'button', onClick: () => setToolDetail(null) }, '收起')),
-              h('div', { className: 'mcpPanelBody' },
-                toolDetail.publicName === null
-                  ? null
-                  : h('p', { className: 'mcpHint' }, '模型侧名称：' + toolDetail.publicName),
-                toolDetail.description === null ? null : h('p', { className: 'mcpDiagText' }, toolDetail.description),
-                h('pre', { className: 'mcpError' }, JSON.stringify(toolDetail.inputSchema, null, 2)))),
             h('div', { className: 'mcpActions mcpActionsSub' },
               h('button', {
                 className: 'mcpBtn', type: 'button', disabled: busy,
                 title: '重新拉一次这一条的工具清单',
                 onClick: () => { void refreshRowTools(form) },
               }, '重新发现工具'),
-              h('button', {
-                className: 'mcpBtn', type: 'button', disabled: busy,
-                title: '用当前表单里的值做一次握手，不写配置',
-                onClick: () => { void probeOne(form) },
-              }, '用当前表单值检测'),
             ),
           ) : null,
         )
@@ -1915,23 +1819,12 @@ window.__ModuleLoader__.load({
           ? h('p', { className: 'mcpEmpty' }, t('hintEmpty'))
           : h('div', { className: 'mcpList' }, rows),
         h('div', { className: 'mcpFoot' },
-          h('div', { className: 'mcpActions' },
-            h('button', { className: 'mcpBtn mcpPrimary', type: 'button', disabled: busy, onClick: () => { void save(false) } }, t('save')),
-            h('button', {
-              className: 'mcpBtn',
-              type: 'button',
-              disabled: busy,
-              title: '跳过保存前的握手检查，直接把配置写进去',
-              onClick: () => { void save(true) },
-            }, '跳过握手保存'),
-            dirty ? h('span', { className: 'mcpStatus' }, '有未保存的改动') : null,
-          ),
           h('div', { className: 'mcpActions mcpActionsSub' },
             h('button', { className: 'mcpBtn', type: 'button', disabled: busy, onClick: () => { void validateOnly() } }, '校验'),
             h('button', { className: 'mcpBtn', type: 'button', disabled: busy, onClick: () => { void probeOnly() } }, t('check')),
             h('button', { className: 'mcpBtn', type: 'button', disabled: busy, onClick: () => { void refreshHealth(false) } }, '刷新状态'),
             h('button', { className: 'mcpBtn', type: 'button', disabled: busy, onClick: () => { void load({}) } }, t('reload')),
-            h('button', { className: 'mcpBtn', type: 'button', disabled: busy, onClick: () => { void openImport('', 'merge') } }, '导入 JSON'),
+            h('button', { className: 'mcpBtn', type: 'button', disabled: busy, onClick: openImportDraft }, '导入 JSON'),
             h('button', { className: 'mcpBtn', type: 'button', disabled: busy, onClick: () => { void openExport() } }, '导出'),
             h('button', { className: 'mcpBtn', type: 'button', disabled: busy, onClick: () => { void openMigration() } }, '迁移明文凭据'),
           ),
@@ -1945,14 +1838,17 @@ window.__ModuleLoader__.load({
           form: connector.form,
           mode: connector.index < 0 ? 'add' : 'edit',
           busy,
-          onChange: (form) => setConnector((prev) => (prev === null ? prev : { ...prev, form })),
+          problems: connector.problems || [],
+          onChange: (form) => setConnector((prev) => (prev === null ? prev : { ...prev, form, problems: [] })),
           onClose: () => setConnector(null),
           onSave: saveConnector,
         }),
         importDraft === null ? null : h(ImportDialog, {
           draft: importDraft,
           busy,
-          onParse: (json, mode) => { void openImport(json, mode) },
+          onParse: (json, mode) => { void parseImport(json, mode) },
+          // 内容一变，上一次的解析结果就作废了：不重置的话「写入」会写进旧 JSON。
+          onEdit: () => setImportDraft((prev) => (prev === null ? prev : { ...prev, parsed: null, error: '' })),
           onClose: () => setImportDraft(null),
           onApply: applyImport,
         }),
@@ -1971,14 +1867,29 @@ window.__ModuleLoader__.load({
     }
 
 
+    const IMPORT_PLACEHOLDER = [
+      '{',
+      '  "mcpServers": {',
+      '    "github": {',
+      '      "url": "https://api.githubcopilot.com/mcp/",',
+      '      "headers": { "Authorization": "${GITHUB_TOKEN}" }',
+      '    }',
+      '  }',
+      '}',
+    ].join('\n')
+
     /**
      * 导入对话框：粘贴 JSON，先预校验，再决定是否写入。
-     * @param {{ draft: object, busy: boolean, onParse: Function, onClose: Function, onApply: Function }} props
+     *
+     * 打开时不预解析——空内容本来就是初始状态，不该一进来就先报一次错。
+     * @param {{ draft: object, busy: boolean, onParse: Function, onEdit: Function, onClose: Function, onApply: Function }} props
      */
-    function ImportDialog({ draft, busy, onParse, onClose, onApply }) {
+    function ImportDialog({ draft, busy, onParse, onEdit, onClose, onApply }) {
       const [text, setText] = React.useState(draft.json)
       const [mode, setMode] = React.useState(draft.mode || 'merge')
       const parsed = draft.parsed
+      const summary = parsed && parsed.summary
+      const issues = (parsed && Array.isArray(parsed.issues)) ? parsed.issues : []
 
       React.useEffect(() => {
         const onKey = (event) => { if (event.key === 'Escape') onClose() }
@@ -1986,7 +1897,6 @@ window.__ModuleLoader__.load({
         return () => document.removeEventListener('keydown', onKey)
       }, [onClose])
 
-      const summary = parsed && parsed.summary
       return createPortal(h('div', {
         className: 'dsb-modal-back',
         onMouseDown: (event) => { if (event.target === event.currentTarget && !busy) onClose() },
@@ -1995,38 +1905,39 @@ window.__ModuleLoader__.load({
           h('div', { className: 'mcpDlgHead' },
             h('div', null,
               h('h2', null, '导入 mcpServers JSON'),
-              h('p', { className: 'mcpDlgSub' }, '支持 { "mcpServers": { ... } } 结构，也支持 servers / connections 数组。整份内容会先整体校验，有一条不合法就不会写入。')),
+              h('p', { className: 'mcpDlgSub' }, '整份内容会先整体校验，有一条不合法就不会写入。')),
             h('button', { className: 'mcpDlgClose', type: 'button', 'aria-label': '关闭', onClick: onClose }, '×')),
-          h('label', { className: 'mcpField mcpFieldPlain' },
-            h('span', { className: 'mcpLabel' }, 'JSON'),
-            h('textarea', {
-              className: 'mcpInput mcpMono',
-              rows: 12,
-              value: text,
-              autoFocus: true,
-              placeholder: '{ "mcpServers": { "github": { "url": "https://api.githubcopilot.com/mcp/", "headers": { "Authorization": "${GITHUB_TOKEN}" } } } }',
-              onChange: (event) => setText(event.target.value),
-            })),
-          h('div', { className: 'mcpPair' },
+          h('textarea', {
+            className: 'mcpCode',
+            rows: 8,
+            value: text,
+            autoFocus: true,
+            spellCheck: false,
+            placeholder: IMPORT_PLACEHOLDER,
+            onChange: (event) => { setText(event.target.value); onEdit() },
+          }),
+          // 说明贴着它描述的东西，不再沉到底部和按钮打架。
+          h('p', { className: 'mcpHint' },
+            '认 "mcpServers"，也认 servers / connections 数组；${VAR} 会被识别成环境变量引用，token 本身不会写进配置文件。'),
+          h('div', { className: 'mcpDlgRow' },
             selectField('冲突处理', mode, (next) => { setMode(next); if (text.trim() !== '') onParse(text, next) }, [
               h('option', { value: 'merge', key: 'merge' }, '同名覆盖'),
               h('option', { value: 'skip', key: 'skip' }, '跳过同名'),
               h('option', { value: 'rename', key: 'rename' }, '同名自动加后缀'),
-            ], { noHintReserve: true }),
+            ]),
             h('button', {
               className: 'mcpBtn', type: 'button', disabled: busy || text.trim() === '',
               onClick: () => onParse(text, mode),
             }, '解析')),
-          draft.error === '' ? null : h('p', { className: 'mcpError' }, draft.error),
-          summary === undefined || summary === null ? null : h('p', { className: 'mcpDiagText' },
-            `将新增 ${summary.added} · 覆盖 ${summary.replaced} · 跳过 ${summary.skipped} · 改名 ${summary.renamed}`),
-          !Array.isArray(draft.parsed && draft.parsed.issues) || draft.parsed.issues.length === 0
-            ? null
-            : h('ul', { className: 'mcpIssues' }, draft.parsed.issues.map((issue, i) => h('li', {
-                key: i,
-                'data-blocking': true,
-              }, issue.message))),
-          h('p', { className: 'mcpHint' }, '${VAR} 形式的值会被识别成环境变量引用，token 本身不会写进配置文件。'),
+          draft.error === '' ? null : h('ul', { className: 'mcpIssues' },
+            h('li', { 'data-blocking': true }, draft.error)),
+          issues.length === 0 ? null : h('ul', { className: 'mcpIssues' }, issues.map((issue, i) => h('li', {
+            key: i,
+            'data-blocking': true,
+          }, issue.message))),
+          summary === undefined || summary === null ? null : h('p', { className: 'mcpParseOk' },
+            h('strong', null, '可以写入'),
+            ` · 新增 ${summary.added} · 覆盖 ${summary.replaced} · 跳过 ${summary.skipped} · 改名 ${summary.renamed}`),
           h('div', { className: 'mcpDlgActions' },
             h('button', { className: 'mcpBtn', type: 'button', disabled: busy, onClick: onClose }, '取消'),
             h('button', {
@@ -2034,8 +1945,8 @@ window.__ModuleLoader__.load({
               type: 'button',
               disabled: busy || parsed === null || parsed === undefined,
               onClick: onApply,
-            }, busy ? '写入中…' : '写入'))),
-        document.body))
+            }, busy ? '写入中…' : '写入')))),
+        document.body)
     }
 
     /**
@@ -2048,6 +1959,7 @@ window.__ModuleLoader__.load({
         try {
           await navigator.clipboard.writeText(draft.json)
           setCopied(true)
+          setTimeout(() => setCopied(false), 2000)
         } catch (error) {
           setCopied(false)
         }
@@ -2060,13 +1972,21 @@ window.__ModuleLoader__.load({
           h('div', { className: 'mcpDlgHead' },
             h('div', null,
               h('h2', null, `导出${MCP_SCOPE_LABELS[scope]}配置`),
-              h('p', { className: 'mcpDlgSub' }, `共 ${draft.count} 条，已脱敏 ${draft.redacted} 处。凭据、本地路径与 URL 查询参数都不会出现在这里。`)),
+              h('p', { className: 'mcpDlgSub' },
+                `${String(draft.count)} 条 · 脱敏 ${String(draft.redacted)} 处 · 凭据、本地路径与 URL 查询参数都不会出现在这里`)),
             h('button', { className: 'mcpDlgClose', type: 'button', 'aria-label': '关闭', onClick: onClose }, '×')),
-          h('textarea', { className: 'mcpInput mcpMono', rows: 16, readOnly: true, value: draft.json }),
+          h('textarea', {
+            className: 'mcpCode mcpCodeReadonly',
+            rows: 14,
+            readOnly: true,
+            spellCheck: false,
+            value: draft.json,
+          }),
           h('div', { className: 'mcpDlgActions' },
-            h('button', { className: 'mcpBtn', type: 'button', onClick: () => { void copy() } }, copied ? '已复制' : '复制'),
-            h('button', { className: 'mcpBtn mcpPrimary', type: 'button', onClick: onClose }, '关闭'))),
-        document.body))
+            h('button', { className: 'mcpBtn', type: 'button', onClick: onClose }, '关闭'),
+            h('button', { className: 'mcpBtn mcpPrimary', type: 'button', onClick: () => { void copy() } },
+              copied ? '已复制' : '复制')))),
+        document.body)
     }
 
     /**
@@ -2107,8 +2027,8 @@ window.__ModuleLoader__.load({
               type: 'button',
               disabled: busy || moves.length === 0,
               onClick: onApply,
-            }, busy ? '写入中…' : '写入并改写配置'))),
-        document.body))
+            }, busy ? '写入中…' : '写入并改写配置')))),
+        document.body)
     }
 
     function mcpT(key) {
@@ -2398,7 +2318,6 @@ window.__ModuleLoader__.load({
         }
       }
 
-      const health = state?.health
       const rows = items.length === 0
         ? h('p', { className: 'tbEmpty' }, ready ? (query === '' ? '还没有记忆。' : '没有匹配的记忆。') : '读取中…')
         : h('div', { className: 'memList' }, items.map((item) => h('article', { className: 'memRow', key: item.id },
@@ -2422,21 +2341,12 @@ window.__ModuleLoader__.load({
               onClick: () => { void removeItem(item) },
             }, '×')))))
 
-      const diagnostics = memoryDiagnosticsText(state?.diagnostics)
       const extractFailed = state?.diagnostics?.lastExtract?.ok === false
 
       return h('div', { className: 'memPane' },
-        h('div', { className: 'memMeta' },
-          h('span', { className: 'memDot', 'data-ok': health?.ok === true }),
-          h('span', null, memoryModeText(state?.config)),
-          h('span', null, typeof state?.count === 'number' && state.count >= 0 ? `${String(state.count)} 条` : ''),
-          memoryEmbeddingText(state) === '' ? null : h('span', null, memoryEmbeddingText(state)),
-          state?.database ? h('span', null, `数据库：${state.database}`) : null,
-          health?.detail ? h('span', null, health.detail) : null),
-        diagnostics === '' ? null : h('p', {
-          className: extractFailed ? 'memError' : 'memHint',
-          role: extractFailed ? 'alert' : undefined,
-        }, diagnostics),
+        extractFailed
+          ? h('p', { className: 'memError', role: 'alert' }, memoryDiagnosticsText(state?.diagnostics))
+          : null,
         h('form', { className: 'memBar', onSubmit: (event) => { event.preventDefault(); void load(query) } },
           h('input', {
             className: 'memSearch',
@@ -2456,7 +2366,6 @@ window.__ModuleLoader__.load({
           }, '合并重复')),
         error === '' ? null : h('p', { className: 'memError', role: 'alert' }, error),
         rows,
-        h('p', { className: 'memHint' }, '存储位置、向量嵌入与自动提炼开关在「设置 → 插件 → 插件配置 → 记忆」里管理。'),
         draft === null ? null : h(MemoryDraftDialog, {
           draft,
           busy,
@@ -3280,12 +3189,16 @@ window.__ModuleLoader__.load({
       }
       render() {
         if (this.state.error === null) return this.props.children
-        return h('button', {
-          className: 'dsb-row',
-          type: 'button',
-          role: 'alert',
-          onClick: () => setStateSafely(this),
-        }, '侧边栏渲染出错，点击重试')
+        // 只写「渲染出错」等于把原因藏起来：把消息一起放出来，报错时不用再翻控制台。
+        const error = this.state.error
+        const detail = error && error.message ? String(error.message) : String(error)
+        return h('div', { className: 'dsbGuard', role: 'alert' },
+          h('button', {
+            className: 'dsb-row',
+            type: 'button',
+            onClick: () => setStateSafely(this),
+          }, '侧边栏渲染出错，点击重试'),
+          h('pre', { className: 'dsbGuardDetail' }, detail))
       }
     }
 

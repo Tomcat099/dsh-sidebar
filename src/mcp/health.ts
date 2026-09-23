@@ -266,6 +266,15 @@ export interface HealthPassOptions extends ProbeOptions {
   /** Probe everything, ignoring freshness and pauses. */
   force?: boolean
   /**
+   * Probe only these entries, ignoring freshness, backoff, and the auth pause.
+   *
+   * Used right after a single entry is saved: the user just changed it, so its
+   * previous verdict describes a configuration that no longer exists, and
+   * waiting out the TTL would leave the row showing the old answer. Entries not
+   * listed here keep the row they already had.
+   */
+  only?: readonly ScopedServer[]
+  /**
    * Report what is already known without probing anything.
    *
    * Used by the page's first load so it paints immediately: an entry with no
@@ -307,12 +316,21 @@ export async function ensureHealth(
   const checked: string[] = []
   const skipped: string[] = []
   const targets: ScopedServer[] = []
+  const only = options.only === undefined ? undefined : new Set(options.only.map(entry => keyOf(entry)))
   for (const server of servers) {
     if (!server.enabled) {
       store.recordDisabled(server)
       continue
     }
-    if (options.defer !== true && (options.force === true || store.due(server))) {
+    const forced = only?.has(keyOf(server)) === true
+    if (only !== undefined && !forced) {
+      // A pass scoped to one entry says nothing about the others, so their rows
+      // are left exactly as they were rather than downgraded to "unknown".
+      if (store.get(server) === undefined) store.recordUnobserved(server)
+      skipped.push(`${server.scope}:${server.id}`)
+      continue
+    }
+    if (options.defer !== true && (forced || options.force === true || store.due(server))) {
       targets.push(server)
       checked.push(`${server.scope}:${server.id}`)
       continue

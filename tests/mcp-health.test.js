@@ -207,6 +207,58 @@ test('deferring a pass reports what is known without probing anything', async ()
   assert.equal(pass.summary.pending, 1)
 })
 
+test('a pass scoped to one entry probes only that entry', async () => {
+  clock = 1_000_000
+  const store = new HealthStore({ now })
+  const first = await ensureHealth(store, [server('a'), server('b')], {
+    force: true,
+    observe: () => probe('connected', { tools: [{ name: 'a' }] }),
+  })
+  assert.equal(first.checked.length, 2)
+  const beforeA = store.get(server('a'))
+  const beforeB = store.get(server('b'))
+
+  // Saving `b` must not make `a` look like it was just checked, nor bump any
+  // counter that belongs to a pass nobody asked for.
+  let calls = 0
+  const scoped = await ensureHealth(store, [server('a'), server('b')], {
+    only: [server('b')],
+    observe: (target) => {
+      calls += 1
+      assert.equal(target.id, 'b')
+      return probe('auth')
+    },
+  })
+
+  assert.equal(calls, 1)
+  assert.deepEqual(scoped.checked, ['global:b'])
+  assert.deepEqual(scoped.skipped, ['global:a'])
+  // `b` moved because it was re-probed; `a` still carries its own verdict from
+  // the previous pass rather than being reclassified.
+  assert.equal(store.get(server('b')).state, 'reauth')
+  assert.notEqual(store.get(server('b')).message, beforeB.message)
+  assert.equal(store.get(server('a')).state, 'healthy')
+  assert.equal(store.get(server('a')).message, beforeA.message)
+})
+
+test('a scoped pass ignores backoff and the auth pause', async () => {
+  clock = 1_000_000
+  const store = new HealthStore({ now })
+  await ensureHealth(store, [server('a')], {
+    force: true,
+    observe: () => probe('auth'),
+  })
+  assert.equal(store.get(server('a')).paused, true)
+
+  // Without `only` this would be skipped: the entry was paused by the failure.
+  await ensureHealth(store, [server('a')], {
+    only: [server('a')],
+    observe: () => probe('connected', { tools: [{ name: 'a' }] }),
+  })
+  assert.equal(store.get(server('a')).state, 'healthy')
+  assert.equal(store.get(server('a')).paused, undefined)
+})
+
 test('a disabled entry is reported as disabled, not as a failure', async () => {
   clock = 1_000_000
   const store = new HealthStore({ now })
